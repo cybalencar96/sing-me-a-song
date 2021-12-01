@@ -1,5 +1,5 @@
 import express from 'express';
-import { postRecommendation } from './controllers/recommendation.js';
+import { postRecommendation, upVote } from './controllers/recommendationController.js';
 
 const app = express();
 
@@ -10,5 +10,6 @@ app.get('/health', (req, res) => {
 });
 
 app.post('/recommendation', postRecommendation);
+app.post('/recommendation/:id/upvote', upVote);
 
 export default app;

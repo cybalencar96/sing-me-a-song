@@ -26,11 +26,35 @@ async function postRecommendation(req, res) {
     }
 }
 
+async function upVote(req, res) {
+    const { id } = req.params;
+
+    const bodyError = schemas.upVote.validate({ id }).error;
+    if (bodyError) {
+        return res.status(400).send(bodyError.details[0].message);
+    }
+
+    try {
+        const { done, content, text } = await recommendationService.upVote({ id });
+
+        if (!done) {
+            return res.status(400).send(text);
+        }
+
+        res.status(200).send(content);
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    }
+
+}
+
 async function getRecommendation() {
     console.log('ooi');
 }
 
 export {
     postRecommendation,
+    upVote,
     getRecommendation,
 };
