@@ -26,27 +26,28 @@ async function postRecommendation(req, res) {
     }
 }
 
-async function upVote(req, res) {
-    const { id } = req.params;
+function vote(type) {
+    return async (req, res) => {
+        const { id } = req.params;
 
-    const bodyError = schemas.upVote.validate({ id }).error;
-    if (bodyError) {
-        return res.status(400).send(bodyError.details[0].message);
-    }
-
-    try {
-        const { done, content, text } = await recommendationService.upVote({ id });
-
-        if (!done) {
-            return res.status(400).send(text);
+        const bodyError = schemas.voteRecommendation.validate({ id }).error;
+        if (bodyError) {
+            return res.status(400).send(bodyError.details[0].message);
         }
+    
+        try {
+            const { done, content, text } = await recommendationService.vote({ type, id });
+    
+            if (!done) {
+                return res.status(400).send(text);
+            }
 
-        res.status(200).send(content);
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
+            res.status(200).send(content && content);
+        } catch (error) {
+            console.error(error);
+            res.sendStatus(500);
+        }
     }
-
 }
 
 async function getRecommendation() {
@@ -55,6 +56,6 @@ async function getRecommendation() {
 
 export {
     postRecommendation,
-    upVote,
+    vote,
     getRecommendation,
 };

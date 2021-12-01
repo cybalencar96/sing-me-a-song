@@ -8,15 +8,24 @@ async function insert({ name, youtubeLink}) {
     return result.rows[0];
 }
 
-async function upVote({ id }) {
+async function vote({ type, id }) {
+    const op = type === 'up' ? '+' : '-';
+
     const result = await connection.query(`
-        UPDATE recommendations SET score = score + 1 WHERE id = $1 RETURNING *
+        UPDATE recommendations SET score = score ${op} 1 WHERE id = $1 RETURNING *
     `, [id]);
 
     return result.rows[0];
 }
 
+async function remove({ id }) {
+    await connection.query(`
+        DELETE FROM recommendations WHERE id = $1
+    `, [id]);
+}
+
 export {
     insert,
-    upVote,
+    vote,
+    remove,
 }

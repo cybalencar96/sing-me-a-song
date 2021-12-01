@@ -7,7 +7,7 @@ const postRecommendation = joi.object({
     youtubeLink: joi.string().pattern(youtubeRegex).required(),
 });
 
-const upVote = joi.object({
+const voteRecommendation = joi.object({
     id: joi.number().min(1).required(),
 });
 
@@ -17,6 +17,6 @@ const getRecommendation = joi.object({
 
 export {
     postRecommendation,
-    upVote,
+    voteRecommendation,
     getRecommendation,
 };

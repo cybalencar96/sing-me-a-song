@@ -22,18 +22,27 @@ async function post({ name, youtubeLink }) {
     return successMessage({ content: recommendation });
 }
 
-async function upVote({ id }) {
-    const recommendation = await recommendationRepo.upVote({ id });
+async function vote({ type, id }) {
+    const recommendation = await recommendationRepo.vote({ type, id });
 
     if (!recommendation) {
         return errorMessage({ text: 'recommendation not found' });
     }
 
-    return successMessage({ content: recommendation })
+    const hated = recommendation.score < -5;
+
+    if (hated) {
+        await recommendationRepo.remove({ id });
+    }
+
+    const text = hated ? 'score below -5, recommendation excluded' : '';
+    const content = hated ? null : recommendation;
+
+    return successMessage({ content, text });
 }
 
 
 export {
     post,
-    upVote,
+    vote,
 }
