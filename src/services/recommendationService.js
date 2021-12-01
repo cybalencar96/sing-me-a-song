@@ -24,7 +24,7 @@ async function post({ name, youtubeLink }) {
 
 async function vote({ type, id }) {
     const recommendation = await recommendationRepo.vote({ type, id });
-
+    
     if (!recommendation) {
         return errorMessage({ text: 'recommendation not found' });
     }
