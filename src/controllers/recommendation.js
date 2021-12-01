@@ -1,4 +1,5 @@
 import * as schemas from '../schemas/recommendation.js';
+import * as recommendationService from '../services/recommendationService.js';
 
 async function postRecommendation(req, res) {
     const {
@@ -12,7 +13,13 @@ async function postRecommendation(req, res) {
     }
 
     try {
-        res.sendStatus(200);
+        const { done, content } = await recommendationService.post({ name, youtubeLink });
+
+        if (!done) {
+            return res.sendStatus(400)
+        }
+
+        res.status(200).send(content);
     } catch (error) {
         console.error(error);
         res.sendStatus(500);
