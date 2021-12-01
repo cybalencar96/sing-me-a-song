@@ -1,0 +1,31 @@
+{
+  "name": "projeto16-signmeasong",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "NODE_ENV=dev nodemon ./src/server.js",
+    "start": "NODE_ENV=prod node ./src/server.js",
+    "test": "NODE_ENV=test npx jest -i",
+    "test:watch": "NODE_ENV=test npx jest -i --watchAll",
+    "test:cover": "npx jest --coverage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.16.4",
+    "@babel/preset-env": "^7.16.4",
+    "babel-jest": "^27.4.2",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jest": "^27.4.2",
+    "joi": "^17.4.2",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.3.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.3"
+  }
+}
