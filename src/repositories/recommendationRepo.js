@@ -24,8 +24,14 @@ async function remove({ id }) {
     `, [id]);
 }
 
+async function get() {
+    const result = await connection.query('SELECT * FROM recommendations');
+    return result.rows;
+}
+
 export {
     insert,
     vote,
     remove,
+    get,
 }

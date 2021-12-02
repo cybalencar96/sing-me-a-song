@@ -2,9 +2,12 @@ import * as recommendationService from '../../src/services/recommendationService
 import * as recommendationRepo from '../../src/repositories/recommendationRepo.js';
 
 const sut = recommendationService;
-const mockPostRecommendationRepo = jest.spyOn(recommendationRepo, 'insert');
-const mockVoteRecommendationRepo = jest.spyOn(recommendationRepo, 'vote');
-const mockRemoveRecommendationRepo = jest.spyOn(recommendationRepo, 'remove');
+
+const mockRecommendationRepo = {
+    insert: () => jest.spyOn(recommendationRepo, 'insert'),
+    vote: () => jest.spyOn(recommendationRepo, 'vote'),
+    remove: () => jest.spyOn(recommendationRepo, 'remove'),
+}
 
 describe('unit RECOMMENDATION ENTITY', () => {
     const successMessage = ({ noContent = false, score = 1 } = {}) => ({
@@ -22,22 +25,14 @@ describe('unit RECOMMENDATION ENTITY', () => {
     const mockRecommendation = ({ score = 1 } = {}) => ({ score: score });
 
     beforeEach(() => {
-        mockPostRecommendationRepo.mockReset();
-        mockVoteRecommendationRepo.mockReset();
-        mockRemoveRecommendationRepo.mockReset();
+        mockRecommendationRepo.insert().mockReset();
+        mockRecommendationRepo.vote().mockReset();
+        mockRecommendationRepo.remove().mockReset();
     });
 
     describe('post recommendation', () => {
-        test('should return errorMessage when object not inserted', async () => {
-            mockPostRecommendationRepo.mockReturnValueOnce(undefined);
-
-            const result = await sut.post({});
-
-            expect(result).toEqual(errorMessage);
-        });
-
         test('should return successMessage when object inserted', async () => {
-            mockPostRecommendationRepo.mockReturnValueOnce(mockRecommendation());
+            mockRecommendationRepo.insert().mockReturnValueOnce(mockRecommendation());
 
             const result = await sut.post({});
             
@@ -47,16 +42,14 @@ describe('unit RECOMMENDATION ENTITY', () => {
 
     describe('vote recommendation', () => {
         test('should return errorMessage when object not upvoted', async () => {
-            mockVoteRecommendationRepo.mockReturnValueOnce(undefined);
+            mockRecommendationRepo.vote().mockReturnValueOnce(undefined);
 
-            const result = await sut.vote({});
-
-            expect(result).toEqual(errorMessage);
+            expect(() => sut.vote({})).rejects.toThrow('recommendation not found'); // rejects for async functions
         });
 
         test('should return successMessage with content when downvoted', async () => {
-            mockVoteRecommendationRepo.mockReturnValueOnce(mockRecommendation({ score: -5 }));
-            mockRemoveRecommendationRepo.mockImplementationOnce(() => {});
+            mockRecommendationRepo.vote().mockReturnValueOnce(mockRecommendation({ score: -5 }));
+            mockRecommendationRepo.remove().mockImplementationOnce(() => {});
 
             const result = await sut.vote({});
 
@@ -64,8 +57,8 @@ describe('unit RECOMMENDATION ENTITY', () => {
         });
 
         test('should return successMessage with empty content when downvoted and excluded', async () => {
-            mockVoteRecommendationRepo.mockReturnValueOnce({ score: -6 });
-            mockRemoveRecommendationRepo.mockImplementationOnce(() => {});
+            mockRecommendationRepo.vote().mockReturnValueOnce({ score: -6 });
+            mockRecommendationRepo.remove().mockImplementationOnce(() => {});
 
             const result = await sut.vote({});
 

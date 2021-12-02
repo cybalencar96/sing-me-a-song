@@ -1,7 +1,8 @@
 import * as schemas from '../schemas/recommendation.js';
 import * as recommendationService from '../services/recommendationService.js';
+import NotFound from '../errors/NotFound.js';
 
-async function postRecommendation(req, res) {
+async function post(req, res, next) {
     const {
         name,
         youtubeLink,
@@ -13,16 +14,11 @@ async function postRecommendation(req, res) {
     }
 
     try {
-        const { done, content } = await recommendationService.post({ name, youtubeLink });
-
-        if (!done) {
-            return res.sendStatus(400)
-        }
+        const { content } = await recommendationService.post({ name, youtubeLink });
 
         res.status(200).send(content);
     } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
+        next(error)
     }
 }
 
@@ -36,26 +32,34 @@ function vote(type) {
         }
     
         try {
-            const { done, content, text } = await recommendationService.vote({ type, id });
-    
-            if (!done) {
-                return res.status(400).send(text);
-            }
+            const { content } = await recommendationService.vote({ type, id });
 
             res.status(200).send(content && content);
         } catch (error) {
-            console.error(error);
-            res.sendStatus(500);
+            if (error instanceof NotFound) {
+                return res.status(404).send(error.message);
+            }
+
+            next(error);
         }
     }
 }
 
-async function getRecommendation() {
-    console.log('ooi');
+async function getRandom(req, res, next) {
+    try {
+        const recommendation = await recommendationService.getRandom();
+        res.send(recommendation);
+    } catch (error) {
+        if (error instanceof NotFound) {
+            return res.status(404).send(error.message);
+        }
+        
+        next(error);
+    }
 }
 
 export {
-    postRecommendation,
+    post,
     vote,
-    getRecommendation,
+    getRandom,
 };
