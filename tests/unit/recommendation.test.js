@@ -1,12 +1,16 @@
 import * as recommendationService from '../../src/services/recommendationService.js';
 import * as recommendationRepo from '../../src/repositories/recommendationRepo.js';
-
+import * as sharedFunctions from '../../src/utils/sharedFunctions.js';
 const sut = recommendationService;
+
+const mockRandomInt = jest.spyOn(sharedFunctions, 'getRandomInt');
+const mockMathRandom = jest.spyOn(global.Math, 'random');
 
 const mockRecommendationRepo = {
     insert: () => jest.spyOn(recommendationRepo, 'insert'),
     vote: () => jest.spyOn(recommendationRepo, 'vote'),
     remove: () => jest.spyOn(recommendationRepo, 'remove'),
+    get: () => jest.spyOn(recommendationRepo, 'get'),
 }
 
 describe('unit RECOMMENDATION ENTITY', () => {
@@ -28,7 +32,11 @@ describe('unit RECOMMENDATION ENTITY', () => {
         mockRecommendationRepo.insert().mockReset();
         mockRecommendationRepo.vote().mockReset();
         mockRecommendationRepo.remove().mockReset();
+        mockRecommendationRepo.get().mockReset();
+        mockRandomInt.mockReset();
+        mockMathRandom.mockReset();
     });
+
 
     describe('post recommendation', () => {
         test('should return successMessage when object inserted', async () => {
@@ -63,6 +71,64 @@ describe('unit RECOMMENDATION ENTITY', () => {
             const result = await sut.vote({});
 
             expect(result).toEqual(successMessage({ noContent: true }));
+        });
+    });
+
+    describe('get random recommendation', () => {
+        test('should throw error when empty recommendations', async () => {
+            mockRecommendationRepo.get().mockReturnValueOnce([]);
+
+            expect(sut.getRandom).rejects.toThrow('there are no recommendations available');
+        });
+
+        test('should return 100% chance of good recommendations', async () => {
+            mockRecommendationRepo.get().mockReturnValueOnce([{id: 0, score: 20 }, {id: 1, score: 20 }]);
+            mockRandomInt.mockReturnValueOnce(1);
+
+            const result = await sut.getRandom();
+
+            const expected = { id: 1, score: 20 };
+            expect(result).toEqual(expected);
+        });
+
+        test('should return 100% chance of bad recommendations', async () => {
+            mockRecommendationRepo.get().mockReturnValueOnce([{id: 0, score: 1 }, {id: 1, score: 2 }]);
+            mockRandomInt.mockReturnValueOnce(1);
+
+            const result = await sut.getRandom();
+
+            const expected = { id: 1, score: 2 };
+            expect(result).toEqual(expected);
+        });
+
+        test('should return a good recommendation', async () => {
+            mockMathRandom.mockReturnValueOnce(0.7);
+            mockRandomInt.mockReturnValueOnce(1);
+            mockRecommendationRepo.get().mockReturnValueOnce([
+                {id: 0, score: 1 }, 
+                {id: 1, score: 20 },
+                {id: 2, score: 21 },
+            ]);
+            
+            const result = await sut.getRandom();
+
+            const expected = { id: 2, score: 21 };
+            expect(result).toEqual(expected);
+        });
+
+        test('should return a bad recommendation', async () => {
+            mockMathRandom.mockReturnValueOnce(0.2);
+            mockRandomInt.mockReturnValueOnce(0);
+            mockRecommendationRepo.get().mockReturnValueOnce([
+                {id: 0, score: 1 }, 
+                {id: 1, score: 20 },
+                {id: 2, score: 21 },
+            ]);
+            
+            const result = await sut.getRandom();
+
+            const expected = { id: 0, score: 1 };
+            expect(result).toEqual(expected);
         });
     });
 });

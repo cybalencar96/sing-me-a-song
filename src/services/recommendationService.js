@@ -1,12 +1,6 @@
 import * as recommendationRepo from '../repositories/recommendationRepo.js';
 import NotFound from '../errors/NotFound.js';
-import { getRandomInt } from '../utils/sharedFunctions.js'; 
-
-const successMessage = (messageContent = {}) => { 
-    const { content = null, text = 'success' } = messageContent;
-
-    return { done: true, content, text };
-};
+import { getRandomInt, successMessage } from '../utils/sharedFunctions.js'; 
 
 async function post({ name, youtubeLink }) {
     const recommendation = await recommendationRepo.insert({ name, youtubeLink });
