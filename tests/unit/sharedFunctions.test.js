@@ -1,3 +1,4 @@
+import '../../src/setup.js';
 import * as sharedFunctions from '../../src/utils/sharedFunctions.js';
 
 jest.spyOn(global.Math, 'floor').mockReturnValue(1)

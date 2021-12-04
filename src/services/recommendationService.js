@@ -12,7 +12,7 @@ async function vote({ type, id }) {
     const recommendation = await recommendationRepo.vote({ type, id });
 
     if (!recommendation) {
-        throw new Error('recommendation not found');
+        throw new NotFound('recommendation not found');
     }
 
     const hated = recommendation.score < -5;
@@ -29,7 +29,7 @@ async function vote({ type, id }) {
 
 async function getRandom() {
     const allRecommendations = await recommendationRepo.get();
-
+    
     if (allRecommendations.length === 0) {
         throw new NotFound('there are no recommendations available')
     }
