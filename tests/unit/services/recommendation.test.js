@@ -1,8 +1,8 @@
-import '../../src/setup.js';
-import * as recommendationService from '../../src/services/recommendationService.js';
-import * as recommendationRepo from '../../src/repositories/recommendationRepo.js';
-import * as sharedFunctions from '../../src/utils/sharedFunctions.js';
-import NotFound from '../../src/errors/NotFound.js';
+import '../../../src/setup.js';
+import * as recommendationService from '../../../src/services/recommendationService.js';
+import * as recommendationRepo from '../../../src/repositories/recommendationRepo.js';
+import * as sharedFunctions from '../../../src/utils/sharedFunctions.js';
+import NotFound from '../../../src/errors/NotFound.js';
 
 const sut = recommendationService;
 
@@ -22,12 +22,6 @@ describe('unit RECOMMENDATION ENTITY', () => {
         text: expect.any(String),
         content: noContent ? null : mockRecommendation({ score }),
     })
-
-    const errorMessage = {
-        done: false,
-        text: expect.any(String),
-        content: null
-    }
 
     const mockRecommendation = ({ score = 1 } = {}) => ({ score: score });
 

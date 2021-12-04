@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -103,32 +103,32 @@
 <a name='L38'></a><a href='#L38'>38</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -139,33 +139,33 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import connection from '../connection.js';
 &nbsp;
-async function <span class="fstat-no" title="function not covered" >insert(</span>{ name, youtubeLink}) {
-    const result = <span class="cstat-no" title="statement not covered" >await connection.query(`</span>
+async function insert({ name, youtubeLink}) {
+    const result = await connection.query(`
         INSERT INTO recommendations (name, "youtubeLink") VALUES ($1, $2) RETURNING *
     `, [name, youtubeLink]);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return result.rows[0];</span>
+    return result.rows[0];
 }
 &nbsp;
-async function <span class="fstat-no" title="function not covered" >vote(</span>{ type, id }) {
-    const op = <span class="cstat-no" title="statement not covered" >type === 'up' ? '+' : '-';</span>
+async function vote({ type, id }) {
+    const op = type === 'up' ? '+' : <span class="branch-1 cbranch-no" title="branch not covered" >'-';</span>
 &nbsp;
-    const result = <span class="cstat-no" title="statement not covered" >await connection.query(`</span>
+    const result = await connection.query(`
         UPDATE recommendations SET score = score ${op} 1 WHERE id = $1 RETURNING *
     `, [id]);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return result.rows[0];</span>
+    return result.rows[0];
 }
 &nbsp;
-async function <span class="fstat-no" title="function not covered" >remove(</span>{ id }) {
-<span class="cstat-no" title="statement not covered" >    await connection.query(`</span>
+async function remove({ id }) {
+    await connection.query(`
         DELETE FROM recommendations WHERE id = $1
     `, [id]);
 }
 &nbsp;
-async function <span class="fstat-no" title="function not covered" >get(</span>) {
-    const result = <span class="cstat-no" title="statement not covered" >await connection.query('SELECT * FROM recommendations');</span>
-<span class="cstat-no" title="statement not covered" >    return result.rows;</span>
+async function get() {
+    const result = await connection.query('SELECT * FROM recommendations');
+    return result.rows;
 }
 &nbsp;
 export {
@@ -181,7 +181,7 @@ export {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat Dec 04 2021 08:45:23 GMT-0300 (Horário Padrão de Brasília)
+                at Sat Dec 04 2021 09:59:18 GMT-0300 (Horário Padrão de Brasília)
             </div>
         </div>
         <script src="../../prettify.js"></script>
