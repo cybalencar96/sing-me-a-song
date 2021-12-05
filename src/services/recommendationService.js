@@ -39,7 +39,7 @@ async function getRandom() {
 
     if (!goodRec.length || !badRec.length) {
         const hundredPecentRecommendation = goodRec.length === 0 ? badRec : goodRec;
-        const randomIndex = getRandomInt(0, hundredPecentRecommendation.length - 1);
+        const randomIndex = getRandomInt(0, hundredPecentRecommendation.length);
 
         return hundredPecentRecommendation[randomIndex];
     }
@@ -47,7 +47,7 @@ async function getRandom() {
     const recommendationType = (Math.random() - 0.3) >= 0 ? 'good' : 'bad'; // 70% de ser positivo, 30% de ser negativo
     const possibleRecommendations = recommendationType === 'good' ? goodRec : badRec 
 
-    const randomIndex = getRandomInt(0, possibleRecommendations.length - 1);
+    const randomIndex = getRandomInt(0, possibleRecommendations.length);
 
     return possibleRecommendations[randomIndex];
 }

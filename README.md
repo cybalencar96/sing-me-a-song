@@ -72,7 +72,7 @@ DB_NAME=sing
 
    <br />
 
-8. Run (copy & paste) the dump.sql statements in database
+5. Run (copy & paste) the dump.sql statements in database
    <br />
    <br />
 
